@@ -1,0 +1,45 @@
+---
+import {
+  getAncestorPagesRecursive,
+  getPathFromAncestorPages,
+} from "../utils/notion/getPageTree";
+import type { ChildDatabaseBlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import { queryNotionDatabasePageAll } from "../utils/notion/api/databases";
+import { toPage, isPublicPage } from "../utils/notion/utils";
+interface Props {
+  block: ChildDatabaseBlockObjectResponse;
+}
+
+const { block } = Astro.props;
+
+const ancestors = getPathFromAncestorPages(
+  await getAncestorPagesRecursive(block.id),
+);
+
+const pages = await queryNotionDatabasePageAll({
+  database_id: block.id,
+  sorts: [
+    {
+      timestamp: "last_edited_time",
+      direction: "descending",
+    },
+  ],
+});
+const databasePages = pages
+  .map((page) => toPage(page, ancestors))
+  .filter(isPublicPage);
+---
+
+<div id={block.id} class=`notion-selectable notion-collection_view-block`>
+  <ul>
+    {
+      databasePages.map((page) => {
+        return (
+          <li id={page.id}>
+            <a href={page.path + page.slug}>{page.title}</a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</div>

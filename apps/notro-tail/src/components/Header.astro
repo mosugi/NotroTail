@@ -1,0 +1,21 @@
+---
+import { getPagesByType, PageType } from "../utils/template";
+
+const headerPages = await getPagesByType(PageType.Header);
+---
+
+{
+  headerPages.length > 0 ? (
+    <header>
+      <nav>
+        <ul>
+          {headerPages.map((page) => (
+            <li>
+              <a href={page.slug}>{page.title}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+  ) : null
+}

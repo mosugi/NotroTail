@@ -1,0 +1,163 @@
+---
+import type { ListBlockChildrenParameters } from "@notionhq/client/build/src/api-endpoints";
+
+import Image from "../components/Image.astro";
+import Paragraph from "../components/Paragraph.astro";
+import Heading1 from "../components/Heading1.astro";
+import Heading2 from "../components/Heading2.astro";
+import Heading3 from "../components/Heading3.astro";
+import BulletedListItem from "./BulletedListItem.astro";
+import NumberedListItem from "./NumberedListItem.astro";
+import BulletedListItemContainer from "./BulletedListItemContainer.astro";
+import NumberedListItemContainer from "./NumberedListItemContainer.astro";
+import ColumnList from "./ColumnList.astro";
+import Column from "./Column.astro";
+import CalloutOrCustomContainer from "./CalloutOrCustomContainer.astro";
+import Bookmark from "./Bookmark.astro";
+import CodeOrRawHTML from "./CodeOrRawHTML.astro";
+import Divider from "./Divider.astro";
+import Database from "./Database.astro";
+import LinkToPage from "./LinkToPage.astro";
+import ChildPage from "./ChildPage.astro";
+import SyncedBlock from "./SyncedBlock.astro";
+import Quote from "./Quote.astro";
+import TodoListItem from "./TodoListItem.astro";
+import TodoListItemContainer from "./TodoListItemContainer.astro";
+import { listNotionBlockChildrenAll } from "notro";
+
+interface Props {
+  param: ListBlockChildrenParameters;
+}
+
+const { param } = Astro.props;
+
+const blocks = await listNotionBlockChildrenAll(param);
+
+let temporaryListItemElements: any = [];
+---
+
+{
+  blocks.map((block, i, array) => {
+    let children = null;
+
+    if (block.has_children) {
+      if (
+        block.type === "synced_block" &&
+        block.synced_block?.synced_from?.block_id
+      ) {
+        // For synchronised blocks, obtain the block from which the synchronisation originated.
+        children = (
+          <Astro.self
+            param={{ block_id: block.synced_block?.synced_from?.block_id }}
+          />
+        );
+      } else {
+        children = <Astro.self param={{ block_id: block.id }} />;
+      }
+    }
+
+    switch (block.type) {
+      case "paragraph":
+        return <Paragraph block={block}>{children}</Paragraph>;
+      case "heading_1":
+        return <Heading1 block={block}>{children}</Heading1>;
+      case "heading_2":
+        return <Heading2 block={block}>{children}</Heading2>;
+      case "heading_3":
+        return <Heading3 block={block}>{children}</Heading3>;
+      case "bulleted_list_item":
+        const nextIsBulleted = array[i + 1]?.type === "bulleted_list_item";
+        temporaryListItemElements.push(
+          <BulletedListItem block={block}>{children}</BulletedListItem>,
+        );
+        if (!nextIsBulleted && temporaryListItemElements.length > 0) {
+          const blocks = (
+            // FIXME If BulletedListItemContainer and NumberedListItemContainer are mixed, it will be wrong
+            <BulletedListItemContainer>
+              {temporaryListItemElements}
+            </BulletedListItemContainer>
+          );
+          temporaryListItemElements = [];
+          return blocks;
+        }
+        return null;
+      case "numbered_list_item":
+        const nextIsNumbered = array[i + 1]?.type === "numbered_list_item";
+        temporaryListItemElements.push(
+          <NumberedListItem block={block}>{children}</NumberedListItem>,
+        );
+        if (!nextIsNumbered && temporaryListItemElements.length > 0) {
+          const blocks = (
+            <NumberedListItemContainer>
+              {temporaryListItemElements}
+            </NumberedListItemContainer>
+          );
+          temporaryListItemElements = [];
+          return blocks;
+        }
+        return null;
+      case "callout":
+        return (
+          <CalloutOrCustomContainer block={block}>
+            {children}
+          </CalloutOrCustomContainer>
+        );
+      case "column_list":
+        return <ColumnList block={block}>{children}</ColumnList>;
+      case "column":
+        return <Column block={block}>{children}</Column>;
+      case "image":
+        return <Image block={block} />;
+      case "code":
+        return <CodeOrRawHTML block={block} />;
+      case "bookmark":
+        return <Bookmark block={block} />;
+      case "divider":
+        return <Divider block={block} />;
+      case "child_database":
+        return <Database block={block} />;
+      case "child_page":
+        // FIXME ChildPage is only for freeform
+        return <ChildPage block={block} />;
+      case "link_to_page":
+        return <LinkToPage block={block} />;
+      case "synced_block":
+        return <SyncedBlock block={block}>{children}</SyncedBlock>;
+      case "quote":
+        return <Quote block={block}>{children}</Quote>;
+      case "to_do":
+        const nextIsTodo = array[i + 1]?.type === "to_do";
+        temporaryListItemElements.push(
+          <TodoListItem block={block}>{children}</TodoListItem>,
+        );
+        if (!nextIsTodo && temporaryListItemElements.length > 0) {
+          const blocks = (
+            <TodoListItemContainer>
+              {temporaryListItemElements}
+            </TodoListItemContainer>
+          );
+          temporaryListItemElements = [];
+          return blocks;
+        }
+        return null;
+      case "template":
+      case "toggle":
+      case "breadcrumb":
+      case "table_of_contents":
+      case "table":
+      case "table_row":
+      case "embed":
+      case "video":
+      case "audio":
+      case "file":
+      case "pdf":
+      case "equation":
+      case "link_preview":
+      case "unsupported":
+      // return <Debug {block} />;
+      default:
+        console.log("Unknown block type:", block.type);
+        return null;
+    }
+  })
+}

@@ -1,0 +1,21 @@
+---
+import { getPagesByType, PageType } from "../utils/template";
+
+const footerPages = await getPagesByType(PageType.Footer);
+---
+
+{
+  footerPages.length > 0 ? (
+    <footer>
+      <div>
+        <ul>
+          {footerPages.map((page) => (
+            <li>
+              <a href={page.slug}>{page.title}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </footer>
+  ) : null
+}

@@ -1,0 +1,3 @@
+[template.environment]
+  NOTION_ID = "Notion Database or Page ID"
+  NOTION_TOKEN = "Your Notion API Token"

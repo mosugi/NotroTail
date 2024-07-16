@@ -1,0 +1,12 @@
+---
+import type { CodeBlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+interface Props {
+  block: CodeBlockObjectResponse;
+}
+
+const { block } = Astro.props;
+---
+
+<code id={block.id} class="notion-selectable notion-code-block">
+  {block.code.rich_text[0].plain_text}
+</code>

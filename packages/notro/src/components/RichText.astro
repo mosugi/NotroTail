@@ -1,0 +1,44 @@
+---
+import type { RichTextItemResponse } from "@notionhq/client/build/src/api-endpoints";
+import { getNotionColor } from "../utils/notion/utils";
+
+interface Props {
+  richText: Array<RichTextItemResponse>;
+}
+
+const { richText } = Astro.props;
+---
+
+{
+  richText.map((item) => {
+    let content = item.plain_text;
+    if (item.annotations.bold) {
+      content = <strong class="notion-annotation-bold">{content}</strong>;
+    }
+    if (item.annotations.italic) {
+      content = <em class="notion-annotation-italic">{content}</em>;
+    }
+    if (item.annotations.strikethrough) {
+      content = <del class="notion-annotation-strikethrough">{content}</del>;
+    }
+    if (item.annotations.underline) {
+      content = <u class="notion-annotation-underline">{content}</u>;
+    }
+    if (item.annotations.code) {
+      content = <code class="notion-annotation-code">{content}</code>;
+    }
+    if (item.annotations.color) {
+      content = (
+        <span class={getNotionColor(item.annotations.color)}>{content}</span>
+      );
+    }
+    if (item.href) {
+      content = (
+        <a href={item.href} class="notion-link">
+          {content}
+        </a>
+      );
+    }
+    return content;
+  })
+}

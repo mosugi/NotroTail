@@ -1,0 +1,30 @@
+---
+import type { ToDoBlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import RichText from "./RichText.astro";
+interface Props {
+  block: ToDoBlockObjectResponse;
+}
+
+const { block } = Astro.props;
+---
+
+<li id={block.id} class=`notion-selectable notion-to_do-block`>
+  <input
+    id={block.id + "-input"}
+    type="checkbox"
+    checked={block.to_do.checked}
+    disabled
+  />
+  <label for={block.id + "-input"}>
+    {
+      block.to_do.checked ? (
+        <s>
+          <RichText richText={block.to_do.rich_text} />
+        </s>
+      ) : (
+        <RichText richText={block.to_do.rich_text} />
+      )
+    }
+  </label>
+  <slot />
+</li>

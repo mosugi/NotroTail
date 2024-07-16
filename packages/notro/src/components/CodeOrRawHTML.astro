@@ -1,0 +1,23 @@
+---
+import type { CodeBlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import options from "virtual:notro-options";
+import Code from "./Code.astro";
+
+interface Props {
+  block: CodeBlockObjectResponse;
+}
+
+const { block } = Astro.props;
+
+const isHtml = block.code.language === "html";
+---
+
+{
+  options.useRawHtml && isHtml ? (
+    <div set:html={block.code.rich_text[0]?.plain_text} />
+  ) : (
+    <Code block={block}>
+      <slot />
+    </Code>
+  )
+}

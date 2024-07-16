@@ -1,0 +1,30 @@
+---
+import type { LinkToPageBlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import {
+  getAncestorPagesRecursive,
+  getPathFromAncestorPages,
+} from "../utils/notion/getPageTree";
+import { toPage } from "../utils/notion/utils";
+import { getNotionPage } from "../utils/notion/api/pages";
+interface Props {
+  block: LinkToPageBlockObjectResponse;
+}
+
+const { block } = Astro.props;
+
+let page, href;
+if (block.link_to_page?.type === "page_id" && block.link_to_page?.page_id) {
+  const ancestors = getPathFromAncestorPages(
+    await getAncestorPagesRecursive(block.link_to_page?.page_id),
+  );
+  const notionPage = await getNotionPage({
+    page_id: block.link_to_page?.page_id,
+  });
+  page = notionPage ? toPage(notionPage) : null;
+  href = ancestors ? ancestors + page?.slug : page?.slug;
+}
+---
+
+<div id={block.id} class=`notion-selectable notion-alias-block`>
+  <a href={href}>{page?.title}</a>
+</div>

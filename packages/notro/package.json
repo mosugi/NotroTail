@@ -1,0 +1,31 @@
+{
+  "name": "notro",
+  "version": "0.0.1",
+  "author": "mosugi",
+  "repository": "github:mosugi/notro-tail",
+  "license": "MIT",
+  "description": "Astro integration for Notion",
+  "keywords": [
+    "astro",
+    "withastro",
+    "astro-component",
+    "astro-integration",
+    "notion"
+  ],
+  "main": "./src/index.ts",
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "preview": "astro preview",
+    "astro": "astro",
+    "format": "prettier --write 'src/**/*.ts' 'src/**/*.astro'"
+  },
+  "dependencies": {
+    "astro": "^4.11.5",
+    "typescript": "^5.4.5"
+  }
+}

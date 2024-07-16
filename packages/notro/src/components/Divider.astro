@@ -1,0 +1,10 @@
+---
+import type { DividerBlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+interface Props {
+  block: DividerBlockObjectResponse;
+}
+
+const { block } = Astro.props;
+---
+
+<hr id={block.id} class=`notion-selectable notion-divider-block` />

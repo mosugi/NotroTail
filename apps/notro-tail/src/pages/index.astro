@@ -1,0 +1,35 @@
+---
+import { isChildPage, isChildDatabase } from "notro/src/utils/notion/utils";
+import { getNotionPage } from "notro/src/utils/notion/api/pages";
+import { toPage } from "notro/src/utils/notion/utils";
+import BlockRenderer from "notro/src/components/BlockRenderer.astro";
+import { getPagesByType, PageType } from "../utils/template";
+import Layout from "../layouts/Layout.astro";
+import { getNotionBlock } from "notro";
+import type { Page } from "notro/src/utils/notion/utils.ts";
+
+const block = await getNotionBlock({
+  block_id: process.env.NOTION_ID as string,
+});
+
+let page: Page | null = null;
+if (isChildDatabase(block)) {
+  // Template Database
+  const indexPages = await getPagesByType(PageType.Home);
+  page = indexPages[0];
+} else if (block && isChildPage(block)) {
+  // Freeform Page
+  const notionPage = await getNotionPage({ page_id: block.id });
+  page = notionPage ? toPage(notionPage) : null;
+}
+---
+
+{
+  page && (
+    <Layout title={page.title}>
+      <main>
+        <BlockRenderer param={{ block_id: page.id }} />
+      </main>
+    </Layout>
+  )
+}

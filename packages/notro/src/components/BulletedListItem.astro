@@ -1,0 +1,17 @@
+---
+import type { BulletedListItemBlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import RichText from "./RichText.astro";
+interface Props {
+  block: BulletedListItemBlockObjectResponse;
+}
+
+const { block } = Astro.props;
+---
+
+<li
+  id={block.id}
+  class=`notion-selectable notion-bulleted_list-block notion-color-${block.bulleted_list_item.color}`
+>
+  <RichText richText={block.bulleted_list_item.rich_text} />
+  <slot />
+</li>
