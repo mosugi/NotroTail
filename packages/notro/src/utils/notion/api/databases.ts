@@ -11,7 +11,7 @@ const queryNotionDatabase = async (
   param: QueryDatabaseParameters,
   useCache: boolean = true,
 ): Promise<QueryDatabaseResponse | null> => {
-  const cacheKey = `queryNotionDatabase:${param.database_id}:${param.start_cursor}`;
+  const cacheKey = `queryNotionDatabase:${param.database_id}:${param.start_cursor ?? ""}`;
   const notionClient = createNotionClient();
   return fetchData(
     cacheKey,

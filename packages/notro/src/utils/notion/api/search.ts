@@ -9,7 +9,7 @@ const searchNotion = async (
   param: SearchParameters,
   useCache: boolean = true,
 ): Promise<SearchResponse | null> => {
-  const cacheKey = `searchNotion:${param.query}:${param.start_cursor}`;
+  const cacheKey = `searchNotion:${param.query}:${param.start_cursor ?? ""}`;
   const notionClient = createNotionClient();
   return fetchData(cacheKey, () => notionClient.search(param), useCache);
 };
