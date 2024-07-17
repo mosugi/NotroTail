@@ -117,6 +117,12 @@
         @apply my-1 rounded-md bg-gray-100 p-4 pr-3;
     }
 
+    .notion-toggle-block {
+        h1,h2,h3 {
+            @apply inline-block;
+        }
+    }
+
     .notion-column-block {
         @apply flex flex-col;
     }
