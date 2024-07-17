@@ -11,7 +11,7 @@ const { block } = Astro.props;
 
 <h4
   id={block.id}
-  class=`notion-selectable notion-sub_sub_header-block ${getNotionColor(block.heading_3.color)}}`
+  class=`notion-selectable notion-sub_sub_header-block ${getNotionColor(block.heading_3.color)}`
 >
   <RichText richText={block.heading_3.rich_text} />
   <slot />
