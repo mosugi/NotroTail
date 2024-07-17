@@ -1,5 +1,4 @@
 ---
-import { Code } from "astro:components";
 import type { CodeBlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 interface Props {
   block: CodeBlockObjectResponse;
@@ -8,10 +7,6 @@ interface Props {
 const { block } = Astro.props;
 ---
 
-<Code
-  id={block.id}
-  class="notion-selectable notion-code-block"
-  lang={block.code.language}
->
+<code id={block.id} class="notion-selectable notion-code-block">
   {block.code.rich_text[0].plain_text}
-</Code>
+</code>
