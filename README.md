@@ -1,5 +1,3 @@
-# NotroTail
-
 <p>
 <a href="README.ja.md">English</a>
  | 
