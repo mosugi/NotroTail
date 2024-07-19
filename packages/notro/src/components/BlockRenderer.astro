@@ -24,6 +24,7 @@ import Quote from "./Quote.astro";
 import TodoListItem from "./TodoListItem.astro";
 import TodoListItemContainer from "./TodoListItemContainer.astro";
 import { listNotionBlockChildrenAll } from "notro";
+import ToggleContainer from "./ToggleContainer.astro";
 
 interface Props {
   param: ListBlockChildrenParameters;
@@ -60,11 +61,32 @@ let temporaryListItemElements: any = [];
       case "paragraph":
         return <Paragraph block={block}>{children}</Paragraph>;
       case "heading_1":
-        return <Heading1 block={block}>{children}</Heading1>;
+        return block.heading_1.is_toggleable ? (
+          <ToggleContainer>
+            <Heading1 block={block} slot="summary" />
+            {children}
+          </ToggleContainer>
+        ) : (
+          <Heading1 block={block}>{children}</Heading1>
+        );
       case "heading_2":
-        return <Heading2 block={block}>{children}</Heading2>;
+        return block.heading_2.is_toggleable ? (
+          <ToggleContainer>
+            <Heading2 block={block} slot="summary" />
+            {children}
+          </ToggleContainer>
+        ) : (
+          <Heading2 block={block}>{children}</Heading2>
+        );
       case "heading_3":
-        return <Heading3 block={block}>{children}</Heading3>;
+        return block.heading_3.is_toggleable ? (
+          <ToggleContainer>
+            <Heading3 block={block} slot="summary" />
+            {children}
+          </ToggleContainer>
+        ) : (
+          <Heading3 block={block}>{children}</Heading3>
+        );
       case "bulleted_list_item":
         const nextIsBulleted = array[i + 1]?.type === "bulleted_list_item";
         temporaryListItemElements.push(

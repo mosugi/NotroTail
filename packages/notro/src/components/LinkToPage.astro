@@ -25,6 +25,6 @@ if (block.link_to_page?.type === "page_id" && block.link_to_page?.page_id) {
 }
 ---
 
-<div id={block.id} class=`notion-selectable notion-alias-block`>
-  <a href={href}>{page?.title}</a>
-</div>
+<a id={block.id} class=`notion-selectable notion-alias-block` href={href}
+  >{page?.title}</a
+>

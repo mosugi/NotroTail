@@ -13,7 +13,8 @@ const isCustomContainer =
   block.callout.icon.emoji === "⚙";
 const classes = block.callout.rich_text[0]?.plain_text
   .replace(/\r?\n/g, "")
-  .split("&");
+  .split("&")
+  .map((className) => className.trim());
 ---
 
 {
