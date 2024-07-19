@@ -23,9 +23,9 @@
 > [!NOTE]
 > NotroTailは現在アルファリリースです。安定したリリースのために、フィードバックをお寄せください
 
-## デモ
+## Image
 
-- [ ] ここに画像を貼る
+![BeforeAfter.png](docs%2Fpublic%2FBeforeAfter.png)
 
 ## クイックスタート
 
