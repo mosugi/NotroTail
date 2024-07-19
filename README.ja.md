@@ -64,6 +64,8 @@ TailwindCSSが提供するユーティリティが組み込まれており、モ
 
 tailwind.cssで定義済みのCSSを変更することに加えて、本来の使い方と同じ様にNotionでも直接ユーティリティを適用でき、コンテンツに近い箇所で見た目を定義できます。さらにHTMLも書けるため高度なカスタマイズが可能です
 
+[Tailwind PlayでNotroTailのスタイルを確認する](https://play.tailwindcss.com/2RILChyT7h)
+
 ## インストール方法
 
 Notro Connect を利用せず、ローカル環境や任意の環境で動かす場合の方法です
@@ -106,25 +108,13 @@ NOTION_SECRET=<NOTION_TOKEN>
 
 ブラウザで [http://localhost:4321](http://localhost:4321/) を開きます
 
-## **Contributing**
+## Contributing
 
 バグ報告や機能要望は Issue を作成してください。どんなことでも、どんな言語でも大丈夫です。お気軽にどうぞ。プルリクエストももちろん歓迎します。
 
 ## Roadmap
 
-- [ ] ビルド速度の向上
-- [ ] 対応ブロックの増加
-- [ ] Mermaidプレビューの対応
-- [ ] iframeのドメインごとの対応
-- [ ] RSSフィードの自動生成
-- [ ] タグで記事を分類
-- [ ] 記事のソーシャルシェア
-- [ ] プロジェクトサイトマップの自動生成
-- [ ] ソーシャルメディア共有のためのオープングラフタグ
-- [ ] Tailwind Playと統合してプレビューしながらカスタマイズ
-- [ ] Google Tag Managerとの統合を備えた分析機能
-- [ ] カバー画像やプロパティを活用したリッチなデータベースの表示
-- [ ] https://astro.build/blog/future-of-astro-content-layer/ に対応
+[Github Projectsのロードマップを見る](https://github.com/users/mosugi/projects/4)
 
 ## Licence
 

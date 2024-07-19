@@ -63,6 +63,8 @@ Generate websites from database templates or create from specific pages in a fre
 
 In addition to changing pre-defined CSS in tailwind.css, you can apply utilities directly in Notion, defining the appearance close to the content. HTML can also be written for advanced customization.
 
+[Check out NotroTail's style on Tailwind Play](https://play.tailwindcss.com/2RILChyT7h)
+
 ## Installation Instructions
 
 For running locally or in an environment without Notro Connect.
@@ -111,25 +113,13 @@ npm run dev
 
 Open [http://localhost:4321](http://localhost:4321/) in your browser.
 
-## **Contributing**
+## Contributing
 
 Please create an issue for bug reports or feature requests. Any feedback is welcome in any language. Pull requests are also appreciated.
 
 ## Roadmap
 
-- [ ] Improve build speed
-- [ ] Increase supported blocks
-- [ ] Support Mermaid preview
-- [ ] Support for iframes by domain
-- [ ] Automatic generation of RSS feeds
-- [ ] Categorize articles by tags
-- [ ] Social sharing of articles
-- [ ] Automatic generation of project site maps
-- [ ] Open Graph tags for social media sharing
-- [ ] Integrate Tailwind Play for live preview customization
-- [ ] Analytics with Google Tag Manager
-- [ ] Rich database display utilizing cover images and properties
-- [ ] Support for https://astro.build/blog/future-of-astro-content-layer/
+[See the Github Projects roadmap](https://github.com/users/mosugi/projects/4)
 
 ## License
 
