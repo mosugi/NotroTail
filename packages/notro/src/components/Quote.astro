@@ -8,8 +8,6 @@ interface Props {
 const { block } = Astro.props;
 ---
 
-<div id={block.id} class="notion-selectable notion-quote-block">
-  <blockquote>
-    <RichText richText={block.quote.rich_text} />
-  </blockquote>
-</div>
+<blockquote id={block.id} class="notion-selectable notion-quote-block">
+  <RichText richText={block.quote.rich_text} />
+</blockquote>
