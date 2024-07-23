@@ -5,7 +5,7 @@ import { DiskStore } from "cache-manager-fs-hash";
 export const cache = createCache(
   new DiskStore({
     path: "./cache", // path for cached files
-    ttl: import.meta.env.PROD ? 60 * 60 * 1000 : 10 * 1000, // 1 hour in production, 10 seconds in development
+    ttl: import.meta.env.PROD ? 60 * 60 * 1000 : 30 * 1000, // 1 hour in production, 30 seconds in development
   }),
 );
 export const getFromCache = async <T>(cacheKey: string): Promise<T | null> => {

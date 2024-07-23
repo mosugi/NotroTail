@@ -22,13 +22,16 @@ export default defineConfig({
       optimizeRemoteImage: true,
       useRawHtml: true,
       enableCalloutAsWrapper: true,
-      fetchAllPagesOnServerStart: false,
+      fetchAllPagesOnServerStart: true,
     }),
   ],
   vite: {
     server: {
       watch: {
         ignored: ["**/cache/**/*"],
+        // If fetchAllPagesOnServerStart is set to false, the first load of the tailwindcss class listed in Notion fails if cache detection is not enabled.
+        // usePolling: true,
+        // interval: 10000,
       },
     },
   },
