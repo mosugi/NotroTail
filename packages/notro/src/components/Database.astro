@@ -5,7 +5,9 @@ import {
 } from "../utils/notion/getPageTree";
 import type { ChildDatabaseBlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { queryNotionDatabasePageAll } from "../utils/notion/api/databases";
-import { toPage, isPublicPage } from "../utils/notion/utils";
+import { toPage } from "../utils/notion/utils";
+import options from "virtual:notro-options";
+
 interface Props {
   block: ChildDatabaseBlockObjectResponse;
 }
@@ -18,16 +20,13 @@ const ancestors = getPathFromAncestorPages(
 
 const pages = await queryNotionDatabasePageAll({
   database_id: block.id,
-  sorts: [
-    {
-      timestamp: "last_edited_time",
-      direction: "descending",
-    },
-  ],
+  // TODO
+  // filter_properties: options.childDatabaseFilterProperties,
+  filter: options.queryChildDatabaseParameters.filter,
+  sorts: options.queryChildDatabaseParameters.sorts,
 });
-const databasePages = pages
-  .map((page) => toPage(page, ancestors))
-  .filter(isPublicPage);
+
+const databasePages = pages.map((page) => toPage(page, ancestors));
 ---
 
 <div id={block.id} class=`notion-selectable notion-collection_view-block`>
