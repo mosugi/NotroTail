@@ -28,7 +28,7 @@ const filteredProperties: [string, PageObjectResponse["properties"][1]][] =
       case "rich_text":
         return <RichText richText={value.rich_text} />;
       case "select":
-        return <p>{value.select.name}</p>;
+        return <p>{value.select?.name}</p>;
       case "multi_select":
         return (
           <ul>
@@ -38,7 +38,7 @@ const filteredProperties: [string, PageObjectResponse["properties"][1]][] =
           </ul>
         );
       case "date":
-        return <time datetime={value.date.start}>{value.date.start}</time>;
+        return <time datetime={value.date?.start}>{value.date?.start}</time>;
       case "button":
       case "checkbox":
       case "created_by":
