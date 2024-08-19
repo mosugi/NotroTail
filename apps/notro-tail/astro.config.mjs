@@ -40,7 +40,8 @@ export default defineConfig({
             direction: "descending",
           },
         ],
-      }
+      },
+      visibleChildDatabaseProperties: ["Description","Tags","Category","Date","Author"],
     }),
   ],
   vite: {

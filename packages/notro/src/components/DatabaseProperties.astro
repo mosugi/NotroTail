@@ -1,0 +1,66 @@
+---
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import options from "virtual:notro-options";
+import RichText from "./RichText.astro";
+import * as console from "node:console";
+
+const { properties } = Astro.props as PageObjectResponse["properties"];
+
+const filteredProperties: [string, PageObjectResponse["properties"][1]][] =
+  Object.entries(properties)
+    .filter(([key]) => {
+      return (
+        options.visibleChildDatabaseProperties.length === 0 ||
+        options.visibleChildDatabaseProperties.includes(key)
+      );
+    })
+    .sort(([keyA], [keyB]) => {
+      const indexA = options.visibleChildDatabaseProperties.indexOf(keyA);
+      const indexB = options.visibleChildDatabaseProperties.indexOf(keyB);
+
+      return indexA - indexB;
+    });
+---
+
+{
+  filteredProperties?.map(([key, value]) => {
+    switch (value.type) {
+      case "rich_text":
+        return <RichText richText={value.rich_text} />;
+      case "select":
+        return <p>{value.select.name}</p>;
+      case "multi_select":
+        return (
+          <ul>
+            {value.multi_select.map((item) => {
+              return <li>{item.name}</li>;
+            })}
+          </ul>
+        );
+      case "date":
+        return <time datetime={value.date.start}>{value.date.start}</time>;
+      case "button":
+      case "checkbox":
+      case "created_by":
+      case "created_time":
+      case "email":
+      case "files":
+      case "formula":
+      case "last_edited_by":
+      case "last_edited_time":
+      case "number":
+      case "people":
+      case "phone_number":
+      case "relation":
+      case "rollup":
+      case "status":
+      case "title":
+      case "unique_id":
+      case "url":
+      case "verification":
+      default:
+        console.log("Unsupported property type: " + value.type);
+        return null;
+    }
+  })
+}

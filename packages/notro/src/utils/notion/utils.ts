@@ -137,7 +137,7 @@ export interface Page {
   path: string;
   slug?: string;
   public: boolean;
-  properties: Record<string, any>;
+  properties: PageObjectResponse["properties"];
   response: PageObjectResponse;
 }
 

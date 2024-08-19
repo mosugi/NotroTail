@@ -24,6 +24,7 @@ export type IntegrationOptions = {
   enableCalloutAsWrapper: boolean;
   fetchAllPagesOnServerStart: boolean;
   queryChildDatabaseParameters: QueryDatabaseParameters;
+  visibleChildDatabaseProperties: string[];
 };
 
 function initializeNotionClient(token: string) {

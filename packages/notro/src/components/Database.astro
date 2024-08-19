@@ -7,6 +7,7 @@ import type { ChildDatabaseBlockObjectResponse } from "@notionhq/client/build/sr
 import { queryNotionDatabasePageAll } from "../utils/notion/api/databases";
 import { toPage } from "../utils/notion/utils";
 import options from "virtual:notro-options";
+import DatabaseProperties from "./DatabaseProperties.astro";
 
 interface Props {
   block: ChildDatabaseBlockObjectResponse;
@@ -20,8 +21,6 @@ const ancestors = getPathFromAncestorPages(
 
 const pages = await queryNotionDatabasePageAll({
   database_id: block.id,
-  // TODO
-  // filter_properties: options.childDatabaseFilterProperties,
   filter: options.queryChildDatabaseParameters.filter,
   sorts: options.queryChildDatabaseParameters.sorts,
 });
@@ -36,6 +35,7 @@ const databasePages = pages.map((page) => toPage(page, ancestors));
         return (
           <li id={page.id}>
             <a href={page.path + page.slug}>{page.title}</a>
+            <DatabaseProperties properties={page.properties} />
           </li>
         );
       })
