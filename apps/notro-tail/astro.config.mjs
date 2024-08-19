@@ -23,6 +23,25 @@ export default defineConfig({
       useRawHtml: true,
       enableCalloutAsWrapper: true,
       fetchAllPagesOnServerStart: true,
+      queryChildDatabaseParameters: {
+        filter: {
+          property: "Public",
+          checkbox: {
+            equals: true,
+          },
+        },
+        sorts: [
+          {
+            "property": "Date",
+            "direction": "descending"
+          },
+          {
+            timestamp: "last_edited_time",
+            direction: "descending",
+          },
+        ],
+      },
+      visibleChildDatabaseProperties: ["Description","Tags","Category","Date","Author"],
     }),
   ],
   vite: {

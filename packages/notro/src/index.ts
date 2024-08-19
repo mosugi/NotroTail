@@ -8,6 +8,7 @@ import {
 } from "./utils/notion/api/blocks.ts";
 import { vitePluginNotroOptions } from "./vite-plugins/vite-plugin-notion-options.ts";
 import { fetchAllPagesRecursive } from "./utils/notion/fetchAllPages.ts";
+import type { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints";
 
 export {
   fetchAllChildrenRecursive,
@@ -22,6 +23,8 @@ export type IntegrationOptions = {
   useRawHtml: boolean;
   enableCalloutAsWrapper: boolean;
   fetchAllPagesOnServerStart: boolean;
+  queryChildDatabaseParameters: QueryDatabaseParameters;
+  visibleChildDatabaseProperties: string[];
 };
 
 function initializeNotionClient(token: string) {
