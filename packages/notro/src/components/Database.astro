@@ -8,6 +8,7 @@ import { queryNotionDatabasePageAll } from "../utils/notion/api/databases";
 import { toPage } from "../utils/notion/utils";
 import options from "virtual:notro-options";
 import DatabaseProperties from "./DatabaseProperties.astro";
+import DatabaseCover from "./DatabaseCover.astro";
 
 interface Props {
   block: ChildDatabaseBlockObjectResponse;
@@ -29,16 +30,21 @@ const databasePages = pages.map((page) => toPage(page, ancestors));
 ---
 
 <div id={block.id} class=`notion-selectable notion-collection_view-block`>
-  <ul>
-    {
-      databasePages.map((page) => {
-        return (
-          <li id={page.id}>
-            <a href={page.path + page.slug}>{page.title}</a>
-            <DatabaseProperties properties={page.properties} />
-          </li>
-        );
-      })
-    }
-  </ul>
+  {
+    databasePages.map((page) => {
+      return (
+        <article id={page.id}>
+          {page.cover && (
+            <a href={page.path + page.slug}>
+              <DatabaseCover cover={page.cover} alt={page.title} />
+            </a>
+          )}
+          <a href={page.path + page.slug}>
+            <h2>{page.title}</h2>
+          </a>
+          <DatabaseProperties properties={page.properties} />
+        </article>
+      );
+    })
+  }
 </div>

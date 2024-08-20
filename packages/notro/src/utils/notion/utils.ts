@@ -137,6 +137,7 @@ export interface Page {
   path: string;
   slug?: string;
   public: boolean;
+  cover: PageObjectResponse["cover"];
   properties: PageObjectResponse["properties"];
   response: PageObjectResponse;
 }
@@ -152,6 +153,7 @@ export const toPage = (
     path: formatPath(path),
     slug: isIndex ? undefined : formatPath(getPageSlug(page) || page.id),
     public: getPagePublic(page),
+    cover: page.cover,
     properties: page.properties,
     response: page,
   };

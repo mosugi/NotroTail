@@ -26,19 +26,25 @@ const filteredProperties: [string, PageObjectResponse["properties"][1]][] =
   filteredProperties?.map(([key, value]) => {
     switch (value.type) {
       case "rich_text":
-        return <RichText richText={value.rich_text} />;
+        return value.rich_text && <RichText richText={value.rich_text} />;
       case "select":
-        return <p>{value.select?.name}</p>;
+        return value.select && <p>{value.select?.name}</p>;
       case "multi_select":
         return (
-          <ul>
-            {value.multi_select.map((item) => {
-              return <li>{item.name}</li>;
-            })}
-          </ul>
+          value.multi_select.length > 0 && (
+            <ul>
+              {value.multi_select.map((item) => {
+                return <li>{item.name}</li>;
+              })}
+            </ul>
+          )
         );
       case "date":
-        return <time datetime={value.date?.start}>{value.date?.start}</time>;
+        return (
+          value.date && (
+            <time datetime={value.date?.start}>{value.date?.start}</time>
+          )
+        );
       case "button":
       case "checkbox":
       case "created_by":
