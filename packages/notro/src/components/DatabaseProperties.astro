@@ -1,8 +1,7 @@
 ---
 import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import options from "virtual:notro-options";
-import RichText from "./RichText.astro";
-import * as console from "node:console";
+import DatabaseProperty from "./DatabaseProperty.astro";
 
 const { properties } = Astro.props as PageObjectResponse["properties"];
 
@@ -22,51 +21,14 @@ const filteredProperties: [string, PageObjectResponse["properties"][1]][] =
     });
 ---
 
-{
-  filteredProperties?.map(([key, value]) => {
-    switch (value.type) {
-      case "rich_text":
-        return value.rich_text && <RichText richText={value.rich_text} />;
-      case "select":
-        return value.select && <p>{value.select?.name}</p>;
-      case "multi_select":
-        return (
-          value.multi_select.length > 0 && (
-            <ul>
-              {value.multi_select.map((item) => {
-                return <li>{item.name}</li>;
-              })}
-            </ul>
-          )
-        );
-      case "date":
-        return (
-          value.date && (
-            <time datetime={value.date?.start}>{value.date?.start}</time>
-          )
-        );
-      case "button":
-      case "checkbox":
-      case "created_by":
-      case "created_time":
-      case "email":
-      case "files":
-      case "formula":
-      case "last_edited_by":
-      case "last_edited_time":
-      case "number":
-      case "people":
-      case "phone_number":
-      case "relation":
-      case "rollup":
-      case "status":
-      case "title":
-      case "unique_id":
-      case "url":
-      case "verification":
-      default:
-        console.log("Unsupported property type: " + value.type);
-        return null;
-    }
-  })
-}
+<div class="notion-table-view-row">
+  {
+    filteredProperties?.map(([key, value]) => {
+      return (
+        <div class="notion-table-view-cell">
+          <DatabaseProperty name={key} property={value} />
+        </div>
+      );
+    })
+  }
+</div>

@@ -33,14 +33,14 @@ const databasePages = pages.map((page) => toPage(page, ancestors));
   {
     databasePages.map((page) => {
       return (
-        <article id={page.id}>
+        <article class="notion-collection-item" id={page.id}>
           {page.cover && (
             <a href={page.path + page.slug}>
               <DatabaseCover cover={page.cover} alt={page.title} />
             </a>
           )}
           <a href={page.path + page.slug}>
-            <h2>{page.title}</h2>
+            <h3>{page.title}</h3>
           </a>
           <DatabaseProperties properties={page.properties} />
         </article>

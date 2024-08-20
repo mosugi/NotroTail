@@ -1,0 +1,92 @@
+---
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import RichText from "./RichText.astro";
+import * as console from "node:console";
+
+interface Props {
+  name: string;
+  property: PageObjectResponse["properties"][1];
+}
+
+const { name, property } = Astro.props;
+---
+
+{
+  (() => {
+    switch (property.type) {
+      case "rich_text":
+        return (
+          property.rich_text && (
+            <p
+              class="notion-property-text"
+              data-property-id={property.id}
+              data-property-name={name}
+            >
+              <RichText richText={property.rich_text} />
+            </p>
+          )
+        );
+      case "select":
+        return (
+          property.select && (
+            <span
+              class="notion-property-select"
+              data-property-id={property.id}
+              data-property-name={name}
+            >
+              {property.select?.name}
+            </span>
+          )
+        );
+      case "multi_select":
+        return (
+          property.multi_select.length > 0 && (
+            <div
+              class="notion-property-multi-select"
+              data-property-id={property.id}
+              data-property-name={name}
+            >
+              {property.multi_select.map((item) => {
+                return <span class="notion-property-select">{item.name}</span>;
+              })}
+            </div>
+          )
+        );
+      case "date":
+        return (
+          property.date && (
+            <time
+              class="notion-property-date"
+              data-property-id={property.id}
+              data-property-name={name}
+              datetime={property.date?.start}
+            >
+              {property.date?.start}
+            </time>
+          )
+        );
+      case "button":
+      case "checkbox":
+      case "created_by":
+      case "created_time":
+      case "email":
+      case "files":
+      case "formula":
+      case "last_edited_by":
+      case "last_edited_time":
+      case "number":
+      case "people":
+      case "phone_number":
+      case "relation":
+      case "rollup":
+      case "status":
+      case "title":
+      case "unique_id":
+      case "url":
+      case "verification":
+      default:
+        console.log("Unsupported property type: " + property.type);
+        return null;
+    }
+  })()
+}
