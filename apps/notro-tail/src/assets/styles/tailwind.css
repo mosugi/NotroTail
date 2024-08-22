@@ -61,6 +61,38 @@
             }
         }
     }
+
+    .notion-collection-item {
+        @apply border-blue-600 overflow-hidden rounded-lg shadow transition hover:shadow-lg mt-10;
+
+        .notion-table-view-row {
+            @apply bg-white p-4 sm:p-6;
+        }
+
+        .notion-table-view-cell {
+            @apply mt-2;
+        }
+
+        img {
+            @apply h-56 w-full object-cover;
+        }
+
+        h3 {
+            @apply mt-0.5 text-lg text-gray-900;
+        }
+
+        .notion-property-select {
+            @apply whitespace-nowrap rounded-full bg-gray-100 px-2.5 py-0.5 text-xs;
+        }
+
+        p {
+            @apply mt-2 line-clamp-3 text-sm/relaxed text-gray-500;
+        }
+
+        time {
+            @apply block text-xs text-gray-500
+        }
+    }
 }
 
 /* Notro block styles*/

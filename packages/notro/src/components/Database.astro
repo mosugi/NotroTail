@@ -7,8 +7,7 @@ import type { ChildDatabaseBlockObjectResponse } from "@notionhq/client/build/sr
 import { queryNotionDatabasePageAll } from "../utils/notion/api/databases";
 import { toPage } from "../utils/notion/utils";
 import options from "virtual:notro-options";
-import DatabaseProperties from "./DatabaseProperties.astro";
-import DatabaseCover from "./DatabaseCover.astro";
+import DatabaseItem from "./DatabaseItem.astro";
 
 interface Props {
   block: ChildDatabaseBlockObjectResponse;
@@ -32,19 +31,7 @@ const databasePages = pages.map((page) => toPage(page, ancestors));
 <div id={block.id} class=`notion-selectable notion-collection_view-block`>
   {
     databasePages.map((page) => {
-      return (
-        <article class="notion-collection-item" id={page.id}>
-          {page.cover && (
-            <a href={page.path + page.slug}>
-              <DatabaseCover cover={page.cover} alt={page.title} />
-            </a>
-          )}
-          <a href={page.path + page.slug}>
-            <h3>{page.title}</h3>
-          </a>
-          <DatabaseProperties properties={page.properties} />
-        </article>
-      );
+      return <DatabaseItem page={page} />;
     })
   }
 </div>

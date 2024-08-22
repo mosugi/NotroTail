@@ -2,11 +2,16 @@
 import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import options from "virtual:notro-options";
 import DatabaseProperty from "./DatabaseProperty.astro";
+import { Page } from "../utils/notion/utils";
 
-const { properties } = Astro.props as PageObjectResponse["properties"];
+interface Props {
+  page: Page;
+}
+
+const { page } = Astro.props;
 
 const filteredProperties: [string, PageObjectResponse["properties"][1]][] =
-  Object.entries(properties)
+  Object.entries(page.properties)
     .filter(([key]) => {
       return (
         options.visibleChildDatabaseProperties.length === 0 ||
@@ -26,7 +31,7 @@ const filteredProperties: [string, PageObjectResponse["properties"][1]][] =
     filteredProperties?.map(([key, value]) => {
       return (
         <div class="notion-table-view-cell">
-          <DatabaseProperty name={key} property={value} />
+          <DatabaseProperty name={key} property={value} page={page} />
         </div>
       );
     })
