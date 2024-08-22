@@ -22,8 +22,8 @@ const { title, page } = Astro.props;
   <main>
     <div class="notion-collection-item" id={page.id}>
       <DatabaseCover cover={page.cover} alt={title} />
-      <DatabaseProperties page={page} />
+      <!--<DatabaseProperties page={page} />-->
+      <BlockRenderer param={{ block_id: page.id }} />
     </div>
-    <BlockRenderer param={{ block_id: page.id }} />
   </main>
 </Layout>
