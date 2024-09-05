@@ -37,18 +37,6 @@
         @apply mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8;
     }
 
-    footer {
-        div {
-            @apply mx-auto mt-16 max-w-screen-xl border-t border-gray-100 bg-white px-4 pb-8 pt-16 pt-8 sm:flex sm:items-center sm:justify-between sm:px-6 lg:mt-24 lg:px-8 lg:pt-24;
-            ul {
-                @apply flex flex-wrap justify-center gap-4 text-xs lg:justify-end;
-                li a {
-                    @apply text-gray-500 transition hover:opacity-75;
-                }
-            }
-        }
-    }
-
     .notion-collection-item {
         @apply border-blue-600 overflow-hidden rounded-lg shadow transition hover:shadow-lg mt-10;
 
