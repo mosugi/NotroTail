@@ -1,21 +1,55 @@
 ---
 import { getPagesByType, PageType } from "../utils/template";
 
+const indexPages = await getPagesByType(PageType.Home);
 const headerPages = await getPagesByType(PageType.Header);
 ---
 
 {
   headerPages.length > 0 ? (
-    <header>
-      <nav>
-        <ul>
-          {headerPages.map((page) => (
-            <li>
-              <a href={page.slug}>{page.title}</a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </header>
-  ) : null
-}
+  <header>
+    <nav class="relative bg-white shadow dark:bg-gray-800">
+      <div class="container px-6 py-4 mx-auto lg:flex lg:justify-between lg:items-center">
+        <div class="flex items-center justify-between">
+          {indexPages.length > 0 ? (
+            <a href="/">
+              <h1>{indexPages[0].title}</h1>
+            </a>) : null}
+
+          <!-- Mobile menu button using <details> -->
+          <details class="lg:hidden">
+            <summary
+              class="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400 cursor-pointer list-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                   stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+              </svg>
+            </summary>
+
+            <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
+            <div
+              class="absolute inset-x-0 z-20 w-full px-6 py-4 bg-white dark:bg-gray-800 transition-all duration-300 ease-in-out">
+              <div class="flex flex-col lg:flex-row lg:mx-6">
+                {headerPages.map((page) => (
+                  <a href={page.slug}
+                     class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 lg:mx-4 lg:my-0">{page.title}</a>
+                ))}
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Regular menu for larger screens -->
+        <div class="hidden lg:flex lg:items-center">
+          <div class="flex flex-col md:flex-row md:mx-6">
+            {headerPages.map((page) => (
+              <a href={page.slug}
+                 class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 lg:mx-4 lg:my-0">{page.title}</a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+    ) : null
+  }
