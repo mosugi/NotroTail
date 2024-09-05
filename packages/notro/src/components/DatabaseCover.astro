@@ -1,0 +1,36 @@
+---
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import { Image as AstroImage } from "astro:assets";
+import options from "virtual:notro-options";
+interface Props {
+  cover: PageObjectResponse["cover"];
+  alt: string;
+}
+
+const { cover, alt } = Astro.props;
+---
+
+{
+  cover?.type === "file" ? (
+    <AstroImage
+      src={cover.file.url}
+      alt={alt}
+      inferSize={true}
+      class="notion-collection-cover"
+    />
+  ) : null
+}
+{
+  cover?.type === "external" ? (
+    options.optimizeRemoteImage ? (
+      <AstroImage
+        src={cover.external.url}
+        alt={alt}
+        inferSize={true}
+        class="notion-collection-cover"
+      />
+    ) : (
+      <img src={cover.external.url} class="notion-collection-cover" />
+    )
+  ) : null
+}
