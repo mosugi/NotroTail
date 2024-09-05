@@ -12,25 +12,15 @@ const { cover, alt } = Astro.props;
 
 {
   cover?.type === "file" ? (
-    <AstroImage
-      src={cover.file.url}
-      alt={alt}
-      inferSize={true}
-      class="notion-collection-cover"
-    />
+    <AstroImage src={cover.file.url} alt={alt} inferSize={true} />
   ) : null
 }
 {
   cover?.type === "external" ? (
     options.optimizeRemoteImage ? (
-      <AstroImage
-        src={cover.external.url}
-        alt={alt}
-        inferSize={true}
-        class="notion-collection-cover"
-      />
+      <AstroImage src={cover.external.url} alt={alt} inferSize={true} />
     ) : (
-      <img src={cover.external.url} class="notion-collection-cover" />
+      <img src={cover.external.url} alt={alt} />
     )
   ) : null
 }

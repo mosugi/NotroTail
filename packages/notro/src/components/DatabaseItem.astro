@@ -13,9 +13,11 @@ const { page } = Astro.props;
 <div class="notion-collection-item" id={page.id}>
   {
     page.cover && (
-      <a href={page.path + page.slug}>
-        <DatabaseCover cover={page.cover} alt={page.title} />
-      </a>
+      <div class="notion-collection-cover">
+        <a href={page.path + page.slug}>
+          <DatabaseCover cover={page.cover} alt={page.title} />
+        </a>
+      </div>
     )
   }
   <DatabaseProperties page={page} />

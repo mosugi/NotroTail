@@ -11,7 +11,7 @@ const { title, page } = Astro.props;
 ---
 
 <Layout title={title}>
-  <main>
+  <main class="notrotail-page" id={page.id}>
     <BlockRenderer param={{ block_id: page.id }} />
   </main>
 </Layout>

@@ -26,14 +26,16 @@ const filteredProperties: [string, PageObjectResponse["properties"][1]][] =
     });
 ---
 
-<div class="notion-table-view-row">
-  {
-    filteredProperties?.map(([key, value]) => {
-      return (
-        <div class="notion-table-view-cell">
-          <DatabaseProperty name={key} property={value} page={page} />
-        </div>
-      );
-    })
-  }
-</div>
+{
+  filteredProperties?.map(([name, value]) => {
+    return (
+      <div
+        class="notion-collection-property"
+        data-property-id={value.id}
+        data-property-name={name}
+      >
+        <DatabaseProperty name={name} property={value} page={page} />
+      </div>
+    );
+  })
+}

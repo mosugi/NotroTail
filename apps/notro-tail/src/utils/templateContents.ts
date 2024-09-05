@@ -75,8 +75,7 @@ export const getStaticPathsForTemplateContents = async () => {
         slug: page.slug,
       },
       props: {
-        title: page.title,
-        page: page.response,
+        page: page,
       },
     };
   });
