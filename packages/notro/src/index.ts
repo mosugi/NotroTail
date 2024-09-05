@@ -27,14 +27,16 @@ export type IntegrationOptions = {
   visibleChildDatabaseProperties: string[];
 };
 
-function initializeNotionClient(token: string) {
+function initializeNotionClient(token: string): boolean {
   // @ts-ignore
   if (!globalThis.notionClientInstance) {
     // @ts-ignore
     globalThis.notionClientInstance = new Client({
       auth: token,
     });
+    return true
   }
+  return false
 }
 
 export function getNotionClient() {
@@ -46,6 +48,8 @@ export function getNotionClient() {
   return globalThis.notionClientInstance;
 }
 
+// @ts-ignore
+globalThis.hasRestarted = false;
 const notro = (config: IntegrationOptions): AstroIntegration => {
   return {
     name: "notro",
@@ -70,10 +74,12 @@ const notro = (config: IntegrationOptions): AstroIntegration => {
           `,
         );
       },
-      "astro:server:start": async () => {
-        if (config.fetchAllPagesOnServerStart) {
-          initializeNotionClient(config.token);
-          await fetchAllPagesRecursive(config.notionId as string);
+      "astro:server:setup": async ({ server }) => {
+        const isInitialized = initializeNotionClient(config.token);
+        if (config.fetchAllPagesOnServerStart && isInitialized) {
+          fetchAllPagesRecursive(config.notionId as string).then(() => {
+            server.restart()
+          });
         }
       },
       "astro:build:start": async () => {
