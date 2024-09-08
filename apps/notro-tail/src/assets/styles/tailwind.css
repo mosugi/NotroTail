@@ -63,14 +63,14 @@
     }
 
     .notion-collection-item {
-        @apply flex flex-col;
-
-        .notion-collection-cover img {
-            @apply h-56 w-full object-cover;
-        }
+        @apply flex flex-wrap px-2;
 
         .notion-property-title {
             @apply mt-0.5 text-lg text-gray-900;
+        }
+
+        .notion-property-multi-select {
+            @apply space-x-1;
         }
 
         .notion-property-select {
@@ -82,31 +82,43 @@
         }
 
         [data-property-name="Date"] .notion-property-date {
-            @apply block text-xs text-gray-500;
+            @apply text-xs text-gray-500;
         }
 
         [data-property-name="Tags"] .notion-property-select {
-            @apply bg-yellow-400 text-black;
+            @apply bg-yellow-200 text-black;
         }
 
         [data-property-name="Category"] .notion-property-select {
-            @apply bg-green-500 text-white;
+            @apply bg-green-200 text-black;
         }
     }
 
     .notrotail-page .notion-collection-item {
         @apply mt-10 overflow-hidden rounded-lg border-blue-600 py-2 shadow transition hover:shadow-lg;
+
+        .notion-collection-cover {
+            @apply w-full;
+            img {
+                @apply h-56 object-cover;
+            }
+        }
+
         .notion-collection-property {
-            @apply mt-2 bg-white px-4;
+            @apply mt-2 w-full bg-white px-4;
         }
     }
 
     .notrotail-collection-page .notion-collection-item {
         .notion-collection-cover {
-            @apply order-4;
+            @apply w-full order-5;
             img {
-                @apply rounded-lg;
+                @apply h-56 object-cover rounded-lg;
             }
+        }
+
+        .notion-collection-property {
+            @apply pr-2;
         }
 
         [data-property-name="Date"] {
@@ -115,18 +127,18 @@
 
         [data-property-name="Category"],
         [data-property-name="Tags"] {
-            @apply hidden;
+            @apply order-2;
         }
 
         [data-property-name="Name"] {
-            @apply order-2;
+            @apply w-full order-3;
             .notion-property-title {
                 @apply mt-0.5 text-3xl text-gray-900;
             }
         }
 
         [data-property-name="Description"] {
-            @apply order-3;
+            @apply order-4;
         }
     }
 }
@@ -135,7 +147,7 @@
 @layer utilities {
     /* Notion block types */
     .notion-selectable {
-        @apply py-1;
+        @apply px-2 py-1;
     }
 
     .notion-text-block {

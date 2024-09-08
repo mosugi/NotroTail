@@ -88,8 +88,7 @@ const notro = (config: IntegrationOptions): AstroIntegration => {
         console.time("All blocks fetched");
         await cache.reset();
         initializeNotionClient(config.token);
-        // FIXME This is getting wrong data
-        // await fetchAllChildrenRecursive(config.notionId as string);
+        await fetchAllChildrenRecursive(config.notionId as string);
         console.timeEnd("All blocks fetched");
       },
     },
