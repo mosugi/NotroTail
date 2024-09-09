@@ -1,0 +1,45 @@
+---
+import type { Page } from "notro/src/utils/notion/utils";
+import { isChildDatabase, isChildPage } from "notro/src/utils/notion/utils";
+import { getPagesByType, PageType } from "../utils/template";
+import { getNotionBlock } from "notro";
+import { getImage } from "astro:assets";
+import faviconSvgSrc from "../images/favicon.svg";
+
+const block = await getNotionBlock({
+  block_id: process.env.NOTION_ID as string,
+});
+
+let page: Page | null = null;
+if (isChildDatabase(block)) {
+  // Template Database
+  const indexPages = await getPagesByType(PageType.Home);
+  page = indexPages[0];
+} else if (block && isChildPage(block)) {
+  // TODO Freeform Page
+}
+
+const faviconSrc =
+  page?.response.icon?.type === "file"
+    ? page?.response.icon.file.url
+    : faviconSvgSrc;
+
+const appleTouchIcon = await getImage({
+  src: faviconSrc,
+  width: 180,
+  height: 180,
+  format: "png",
+});
+// RemoteがSVGじゃないとうまく動かない
+const faviconSvg = await getImage({
+  src: faviconSrc,
+  format: "svg",
+  inferSize: true,
+});
+console.log("faviconSvg", faviconSvg);
+---
+
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" href={faviconSvg.src} type="image/svg+xml" />
+<link rel="apple-touch-icon" href={appleTouchIcon.src} />
+<link rel="manifest" href="/manifest.json" />

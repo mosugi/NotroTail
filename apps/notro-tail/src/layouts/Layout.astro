@@ -2,6 +2,7 @@
 import "../assets/styles/tailwind.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import Favicon from "../components/Favicon.astro";
 
 interface Props {
   title: string;
@@ -16,7 +17,7 @@ const { title } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Favicon />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <title>{title}</title>
   </head>

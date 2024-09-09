@@ -67,6 +67,8 @@ In addition to changing pre-defined CSS in tailwind.css, you can apply utilities
 
 [Check out NotroTail's Collection style on Tailwind Play](https://play.tailwindcss.com/eac1s7OY4c)
 
+[Check out NotroTail's Collection style on Tailwind Play](https://play.tailwindcss.com/eac1s7OY4c)
+
 ## Installation Instructions
 
 For running locally or in an environment without Notro Connect.
