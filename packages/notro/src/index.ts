@@ -9,6 +9,7 @@ import {
 import { vitePluginNotroOptions } from "./vite-plugins/vite-plugin-notion-options.ts";
 import { fetchAllPagesRecursive } from "./utils/notion/fetchAllPages.ts";
 import type { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints";
+import { cache } from "./utils/cache.ts";
 
 export {
   fetchAllChildrenRecursive,
@@ -34,9 +35,9 @@ function initializeNotionClient(token: string): boolean {
     globalThis.notionClientInstance = new Client({
       auth: token,
     });
-    return true
+    return true;
   }
-  return false
+  return false;
 }
 
 export function getNotionClient() {
@@ -78,13 +79,14 @@ const notro = (config: IntegrationOptions): AstroIntegration => {
         const isInitialized = initializeNotionClient(config.token);
         if (config.fetchAllPagesOnServerStart && isInitialized) {
           fetchAllPagesRecursive(config.notionId as string).then(() => {
-            server.restart()
+            server.restart();
           });
         }
       },
       "astro:build:start": async () => {
         console.log("Fetching all blocks...");
         console.time("All blocks fetched");
+        await cache.reset();
         initializeNotionClient(config.token);
         await fetchAllChildrenRecursive(config.notionId as string);
         console.timeEnd("All blocks fetched");

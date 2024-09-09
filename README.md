@@ -63,7 +63,9 @@ Generate websites from database templates or create from specific pages in a fre
 
 In addition to changing pre-defined CSS in tailwind.css, you can apply utilities directly in Notion, defining the appearance close to the content. HTML can also be written for advanced customization.
 
-[Check out NotroTail's style on Tailwind Play](https://play.tailwindcss.com/2RILChyT7h)
+[Check out NotroTail's style on Tailwind Play](https://play.tailwindcss.com/RY0CPlb2r9)
+
+[Check out NotroTail's Collection style on Tailwind Play](https://play.tailwindcss.com/eac1s7OY4c)
 
 [Check out NotroTail's Collection style on Tailwind Play](https://play.tailwindcss.com/eac1s7OY4c)
 

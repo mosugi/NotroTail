@@ -1,29 +1,25 @@
 ---
+import type { Page } from "notro/src/utils/notion/utils";
 import { getStaticPathsForTemplateContents } from "../../utils/templateContents";
-import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import BlockRenderer from "notro/src/components/BlockRenderer.astro";
-import DatabaseCover from "notro/src/components/DatabaseCover.astro";
+import DatabaseItem from "notro/src/components/DatabaseItem.astro";
 import DatabaseProperties from "notro/src/components/DatabaseProperties.astro";
 import Layout from "../../layouts/Layout.astro";
 
 interface Props {
-  title: string;
-  page: PageObjectResponse;
+  page: Page;
 }
 
 export async function getStaticPaths() {
   return await getStaticPathsForTemplateContents();
 }
 
-const { title, page } = Astro.props;
+const { page } = Astro.props;
 ---
 
-<Layout title={title}>
-  <main>
-    <div class="notion-collection-item" id={page.id}>
-      <DatabaseCover cover={page.cover} alt={title} />
-      <!--<DatabaseProperties page={page} />-->
-      <BlockRenderer param={{ block_id: page.id }} />
-    </div>
+<Layout title={page.title}>
+  <main class="notrotail-collection-page" id={page.id}>
+    <DatabaseItem page={page} />
+    <BlockRenderer param={{ block_id: page.id }} />
   </main>
 </Layout>
