@@ -1,0 +1,24 @@
+---
+import type { Page } from "../utils/notion/utils";
+import DatabaseProperties from "./DatabaseProperties.astro";
+import DatabaseCover from "./DatabaseCover.astro";
+
+interface Props {
+  page: Page;
+}
+
+const { page } = Astro.props;
+---
+
+<div class="notion-collection-item" id={page.id}>
+  {
+    page.cover && (
+      <div class="notion-collection-cover">
+        <a href={page.path + page.slug}>
+          <DatabaseCover cover={page.cover} alt={page.title} />
+        </a>
+      </div>
+    )
+  }
+  <DatabaseProperties page={page} />
+</div>

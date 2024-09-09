@@ -41,7 +41,7 @@ export default defineConfig({
           },
         ],
       },
-      visibleChildDatabaseProperties: ["Description","Tags","Category","Date","Author"],
+      visibleChildDatabaseProperties: ["Name","Description","Tags","Category","Date","Author"],
     }),
   ],
   vite: {
