@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import { getPlainText } from "notro-loader/utils";
+import config from "../config";
 
 const pages = await getCollection("pages");
 const sorted = pages.slice().sort((a, b) => {
@@ -11,9 +12,9 @@ const sorted = pages.slice().sort((a, b) => {
 });
 ---
 
-<Layout title="My Site">
+<Layout title={config.site.name} description={config.site.description}>
   <main class="nt-container">
-    <h1 class="nt-heading">My Site</h1>
+    <h1 class="nt-heading">{config.site.name}</h1>
     <ul class="nt-page-list">
       {sorted.map((page) => {
         const slug = page.data.properties.Slug.rich_text[0]?.plain_text;

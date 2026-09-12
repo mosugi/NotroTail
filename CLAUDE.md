@@ -252,7 +252,7 @@ notro/
 │   │   │   │   └── global.css       # TailwindCSS 4 imports + notro design tokens + nt-* utilities
 │   │   │   ├── content.config.ts  # Astro Content Collections (posts)
 │   │   │   └── env.d.ts
-│   │   ├── src/config.ts        # site name, navigation links
+│   │   ├── src/config.ts        # site name, navigation links (overridable via NOTRO_SITE_CONFIG)
 │   │   ├── astro.config.mjs
 │   │   ├── package.json
 │   │   └── tsconfig.json
@@ -261,7 +261,8 @@ notro/
 │       │   ├── layouts/     # Layout.astro (simple HTML shell)
 │       │   ├── pages/       # index.astro + [slug].astro
 │       │   ├── styles/      # global.css
-│       │   └── content.config.ts
+│       │   ├── content.config.ts
+│       │   └── config.ts    # site name/description (overridable via NOTRO_SITE_CONFIG)
 │       ├── astro.config.mjs
 │       ├── package.json
 │       └── tsconfig.json
@@ -495,6 +496,25 @@ Set these in Claude Code on the Web → Settings → Environment Variables:
 | `VERCEL_TOKEN` | vercel.com/account/tokens (Personal Access Token) |
 
 > `VERCEL_OIDC_TOKEN` is set automatically by the Vercel platform and does **not** need to be set manually. It cannot be used for Vercel's own REST API (it is an external-service OIDC token); use `VERCEL_TOKEN` (PAT) for Vercel API calls.
+
+### Optional: notro-hub managed site settings (`NOTRO_SITE_CONFIG`)
+
+Sites deployed through [notro-hub](https://github.com/mosugi/notro-hub)'s dashboard let
+managed users edit site-level settings without touching template code. notro-hub writes
+them to this single Vercel project env var as JSON and triggers a redeploy — static
+builds bake it in at build time, there is no runtime re-read.
+
+| Variable | Description |
+|---|---|
+| `NOTRO_SITE_CONFIG` | Optional JSON: `{ title: string, description?: string, nav?: Array<{ label: string, href: string }>, locale?: "en" \| "ja" \| "zh" }` |
+
+`templates/blog/src/config.ts` and `templates/blank/src/config.ts` parse it inside a
+`try`/`catch`, overriding the local defaults declared at the top of each file (`title` →
+`config.site.name`, `nav` entries → `config.navigation.nav`, `locale` → `config.site.lang`
+/ `config.site.locale`; `templates/blank` has no header/nav chrome, so it only reads
+`title`/`description`). Self-hosted users who never set this env var are unaffected —
+parsing a missing or malformed value falls straight through to the defaults. See
+notro-hub's `CLAUDE.md` ("Per-site settings contract") for the writer side.
 
 ---
 
