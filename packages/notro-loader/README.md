@@ -1,5 +1,11 @@
 # notro-loader
 
+<p>
+<a href="README.md">English</a>
+ | 
+<a href="./README.ja.md">日本語</a>
+</p>
+
 ![npm](https://img.shields.io/npm/v/notro-loader)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
 
