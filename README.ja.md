@@ -161,18 +161,17 @@ NotroTail は Astro の静的出力モードを使用しています。SSR ア�
 
 | パッケージ | パス | 役割 |
 |---|---|---|
-| [`remark-nfm`](./packages/remark-nfm/) | `packages/remark-nfm/` | Notion Flavored Markdown 向けの remark プラグイン。前処理（10 件の修正）・`:::callout` ディレクティブ構文・コールアウト変換をまとめたもの。Astro / Notion API 非依存で npm に単独公開可能。 |
-| [`notro-loader`](./packages/notro-loader/) | `packages/notro-loader/` | Astro + Notion API 統合ライブラリ。Content Loader・MDX コンパイルパイプライン（内部で `remark-nfm` を使用）・ヘッドレス Astro コンポーネントを提供。 |
+| [`notro-loader`](./packages/notro-loader/) | `packages/notro-loader/` | Astro + Notion API 統合ライブラリ。Content Loader、Sätteri MDX コンパイルパイプライン（Notion Markdownの正規化を含む）、全 Notion ブロック型に対応したヘッドレス Astro コンポーネントを提供します。使い方は [`notro-loader` README](./packages/notro-loader/README.ja.md) を参照してください。 |
 | [`notro-ui`](./packages/notro-ui/) | `packages/notro-ui/` | `notro-loader` 向けのコピー所有型スタイル済みコンポーネント（shadcn と同じ思想）。`notro-ui add --all` でプロジェクトにコンポーネントをインストール — インストール後はあなたのコードになり、直接編集できます。 |
-| [`rehype-beautiful-mermaid`](./packages/rehype-beautiful-mermaid/) | `packages/rehype-beautiful-mermaid/` | Mermaid コードブロックをビルド時にインライン SVG にレンダリングする rehype プラグイン。 |
+| [`satteri-beautiful-mermaid`](./packages/satteri-beautiful-mermaid/) | `packages/satteri-beautiful-mermaid/` | Mermaid コードブロックをビルド時にインライン SVG にレンダリングする Sätteri hast プラグイン。 |
 | [`create-notro`](./packages/create-notro/) | `packages/create-notro/` | CLI スキャフォールディングツール。`npm create notro@latest` でテンプレートを選択してサイトを作成。 |
-| `notro-blog` (blog) | `templates/blog/` | フル機能ブログテンプレート。リファレンス実装として使用され、`create-notro`（`npm create notro@latest`）でも取得できます。 |
+| `notro-blog` (blog) | `templates/blog/` | フル機能ブログテンプレート — ブログ一覧・タグ・ページネーション・RSS・SEO を備えたリファレンス実装。 |
 | `notro-blank` (blank) | `templates/blank/` | 最小構成スターター。ページ一覧と Notion コンテンツのレンダリングのみ。 |
 | `docs` | `docs/` | Astro Starlight で構築されたドキュメントサイト。 |
 
 **依存関係グラフ:**
 ```
-remark-nfm  ←  notro-loader  ←  notro-ui  ←  notro-blog
+notro-loader  ←  notro-ui  ←  templates/blog
                                      ↑               ↑
                                create-notro  →  templates/blank
 ```
@@ -189,7 +188,7 @@ Notion API はページコンテンツを約 **20,000 ブロック**で切り詰
 
 一部の Notion ブロック型は Notion API によって Markdown に変換されず、レスポンスから無言で除外されます。notro は除外されたブロックの ID を警告ログに出力するので、該当コンテンツを確認・修正できます。
 
-詳細は [Notion API ドキュメント](https://developers.notion.com/reference/retrieve-page-markdown) および [`notro-loader` README](./packages/notro-loader/README.md#notion-api-limitations) を参照してください。
+詳細は [Notion API ドキュメント](https://developers.notion.com/reference/retrieve-page-markdown) および [`notro-loader` README](./packages/notro-loader/README.ja.md#notion-apiの制約) を参照してください。
 
 ## Contributing
 

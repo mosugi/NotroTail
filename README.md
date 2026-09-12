@@ -167,7 +167,7 @@ This repository is a **pnpm workspace monorepo** containing the following packag
 
 | Package | Path | Role |
 |---|---|---|
-| [`notro-loader`](./packages/notro-loader/) | `packages/notro-loader/` | Astro + Notion API integration library. Provides the Content Loader, the Sätteri MDX compile pipeline (including Notion markdown normalization), and headless Astro components for all Notion block types. |
+| [`notro-loader`](./packages/notro-loader/) | `packages/notro-loader/` | Astro + Notion API integration library. Provides the Content Loader, the Sätteri MDX compile pipeline (including Notion markdown normalization), and headless Astro components for all Notion block types. See the [`notro-loader` README](./packages/notro-loader/README.md) for usage. |
 | [`notro-ui`](./packages/notro-ui/) | `packages/notro-ui/` | Copy-and-own styled components for `notro-loader` (shadcn style). Run `notro-ui add --all` to install components into your project — they become your code, editable directly. |
 | [`satteri-beautiful-mermaid`](./packages/satteri-beautiful-mermaid/) | `packages/satteri-beautiful-mermaid/` | Sätteri hast plugin that renders Mermaid code blocks to inline SVG at build time. |
 | [`create-notro`](./packages/create-notro/) | `packages/create-notro/` | CLI scaffolding tool. Run `npm create notro@latest` to choose a template and scaffold a new site. |
