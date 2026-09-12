@@ -201,8 +201,8 @@ const { entry } = Astro.props;
 | プロパティ | 型 | 用途 |
 |---|---|---|
 | `linkToPages` | `Record<string, { url: string; title: string }>` | Notionのページ内リンクを解決します。`buildLinkToPages()`で構築します |
-| `classMap` | `Partial<Record<ClassMapKeys, string>>` | デフォルトコンポーネントを置き換えずにTailwindクラスを注入します |
-| `components` | `Partial<NotionComponents>` | コンポーネントの完全な上書き（例：`{ Callout: MyCallout }`） |
+| `components` | `Record<string, unknown>` | コンポーネントの完全な上書き（例：`{ Callout: MyCallout }`）。デフォルトのヘッドレスコンポーネントにマージされます |
+| `class` | `string` | ラップする`<div>`に適用されるクラス |
 
 ## `NotroContent`が描画するもの
 
@@ -255,7 +255,7 @@ export default defineConfig({
 
 `preprocessNotionMarkdown()`は、Sätteriの`evaluate()`に渡す前に、Notionが出力する生のMarkdownの構造上の問題を修正します。例えば、直前に空行がない`---`区切り線、レガシーな`:::callout{…}`ディレクティブ構文、CommonMarkが後続の内容を生のHTMLとして飲み込んでしまわないよう閉じタグの後に空行を追加する処理などです。
 
-これは`notro-loader`に組み込まれており、`NotroContent`や`notro()`インテグレーションを使う際は設定不要で自動的に適用されます。カスタムのコンパイルパイプラインで必要な場合に備え、直接エクスポートもされています。
+これは`notro-loader`に組み込まれており、`NotroContent`を使う際は設定不要で自動的に適用されます。ただしこのランタイムのNotionコンテンツ経路でのみ実行され、`notro()`インテグレーション経由でコンパイルされる静的な`.mdx`ファイルには適用**されません**（Notion APIの出力ではないため、この種の構造上のクセを持たないからです）。カスタムのコンパイルパイプラインで必要な場合に備え、直接エクスポートもされています。
 
 ```typescript
 import { preprocessNotionMarkdown } from "notro-loader/utils";
@@ -372,5 +372,5 @@ import { notroProperties } from "notro-loader";
 | `hasTag(property, tagName)` | multi-selectプロパティに指定したタグ名が含まれるかを返します。型ガードなしで安全に呼び出せます |
 | `buildLinkToPages(entries, options)` | コレクションのエントリーから`linkToPages`マップを構築します。`NotroContent`に渡してページ間リンクを解決するのに使います |
 | `colorToCSS(color)` | Notionのカラー名をインラインCSSのスタイル文字列に変換します（カスタムコンポーネントでの利用向け） |
-| `preprocessNotionMarkdown(markdown)` | MDXコンパイル前にNotionの生Markdownの構造上の問題を修正します。`NotroContent`と`notro()`が自動的に適用します — 詳細は[Markdown前処理](#markdown前処理preprocessnotionmarkdown)を参照してください |
+| `preprocessNotionMarkdown(markdown)` | MDXコンパイル前にNotionの生Markdownの構造上の問題を修正します。`NotroContent`が自動的に適用します — 詳細は[Markdown前処理](#markdown前処理preprocessnotionmarkdown)を参照してください |
 | `normalizeNotionPresignedUrl(url)` | Notion S3 URLから期限切れとなる`X-Amz-*`クエリパラメータを取り除きます。`notionImageService`が内部的に使用します |

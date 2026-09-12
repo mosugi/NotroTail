@@ -201,8 +201,8 @@ Optional `NotroContent` props:
 | Prop | Type | Purpose |
 |---|---|---|
 | `linkToPages` | `Record<string, { url: string; title: string }>` | Resolves internal Notion page links. Build it with `buildLinkToPages()` |
-| `classMap` | `Partial<Record<ClassMapKeys, string>>` | Injects Tailwind classes into default components without replacing them |
-| `components` | `Partial<NotionComponents>` | Full component overrides (e.g. `{ Callout: MyCallout }`) |
+| `components` | `Record<string, unknown>` | Full component overrides (e.g. `{ Callout: MyCallout }`). Merged over the default headless components |
+| `class` | `string` | Class applied to the wrapping `<div>` |
 
 ## What `NotroContent` renders
 
@@ -255,7 +255,7 @@ Always use Astro's `<Image />` component for Notion images rather than a raw `<i
 
 `preprocessNotionMarkdown()` fixes structural issues in Notion's raw Markdown output before it's handed to Sätteri's `evaluate()` — things like `---` dividers without a preceding blank line, legacy `:::callout{…}` directive syntax, and closing tags that need a trailing blank line so CommonMark doesn't swallow the following content as raw HTML.
 
-It's built into `notro-loader` and is applied automatically whenever you use `NotroContent` or the `notro()` integration — no setup required. It's also exported directly, in case you need it in a custom compile pipeline:
+It's built into `notro-loader` and is applied automatically whenever you use `NotroContent` — no setup required. It runs only on that runtime Notion-content path; static `.mdx` files compiled through the `notro()` integration are **not** run through it, since they aren't Notion API output and don't have these quirks. It's also exported directly, in case you need it in a custom compile pipeline:
 
 ```typescript
 import { preprocessNotionMarkdown } from "notro-loader/utils";
@@ -372,5 +372,5 @@ Individual schemas (e.g. `titlePropertyPageObjectResponseSchema`) remain exporte
 | `hasTag(property, tagName)` | Returns whether a multi-select property contains the given tag name. Safe to call without a type guard |
 | `buildLinkToPages(entries, options)` | Builds a `linkToPages` map from collection entries. Pass to `NotroContent` for resolving inter-page Notion links |
 | `colorToCSS(color)` | Converts a Notion color name to an inline CSS style string (for use in custom components) |
-| `preprocessNotionMarkdown(markdown)` | Fixes structural issues in Notion's raw Markdown before MDX compilation. Applied automatically by `NotroContent` and `notro()` — see [Markdown preprocessing](#markdown-preprocessing-preprocessnotionmarkdown) |
+| `preprocessNotionMarkdown(markdown)` | Fixes structural issues in Notion's raw Markdown before MDX compilation. Applied automatically by `NotroContent` — see [Markdown preprocessing](#markdown-preprocessing-preprocessnotionmarkdown) |
 | `normalizeNotionPresignedUrl(url)` | Strips expiring `X-Amz-*` query params from a Notion S3 URL. Used internally by `notionImageService` |
