@@ -8,8 +8,6 @@
 <a href="./README.ko.md">한국어</a>-->
 </p>
 
-![NotroTail.webp](docs%2Fpublic%2FNotroTail.webp)
-
 <p align="center">
 <a href="https://notrotail.mosugi.com">WebSite</a>
  | 
@@ -28,8 +26,6 @@
  | 
 <a href="https://notrotail.mosugi.com">NotroTail</a>
 </p>
-
-![BeforeAfter.png](docs%2Fpublic%2FBeforeAfter.png)
 
 ## クイックスタート
 
@@ -165,9 +161,12 @@ NotroTail は Astro の静的出力モードを使用しています。SSR ア�
 | [`notro-ui`](./packages/notro-ui/) | `packages/notro-ui/` | `notro-loader` 向けのコピー所有型スタイル済みコンポーネント（shadcn と同じ思想）。`notro-ui add --all` でプロジェクトにコンポーネントをインストール — インストール後はあなたのコードになり、直接編集できます。 |
 | [`satteri-beautiful-mermaid`](./packages/satteri-beautiful-mermaid/) | `packages/satteri-beautiful-mermaid/` | Mermaid コードブロックをビルド時にインライン SVG にレンダリングする Sätteri hast プラグイン。 |
 | [`create-notro`](./packages/create-notro/) | `packages/create-notro/` | CLI スキャフォールディングツール。`npm create notro@latest` でテンプレートを選択してサイトを作成。 |
+| [`notro-md-sync`](./packages/notro-md-sync/) | `packages/notro-md-sync/` | ローカルのMarkdownファイルとNotionデータソース間で双方向同期を行うCLIツール。 |
 | `notro-blog` (blog) | `templates/blog/` | フル機能ブログテンプレート — ブログ一覧・タグ・ページネーション・RSS・SEO を備えたリファレンス実装。 |
 | `notro-blank` (blank) | `templates/blank/` | 最小構成スターター。ページ一覧と Notion コンテンツのレンダリングのみ。 |
-| `docs` | `docs/` | Astro Starlight で構築されたドキュメントサイト。 |
+| `notro-basics` (basics) | `templates/basics/` | 最小構成のブログスターター。Notionデータベースをpostsコレクションとして描画しますが、フル機能ブログのタグ・ページネーション・RSSはありません。 |
+| `notro-gallery` (gallery) | `templates/gallery/` | ポートフォリオ／作品ギャラリー用スターター。Notionデータベースをタグ付きのworksコレクションとして描画します。 |
+| `notro-docs` (docs) | `templates/docs/` | Astro Starlight で構築されたドキュメントサイト — [notrotail.mosugi.com/doc](https://notrotail.mosugi.com/doc) はこのテンプレートから生成されています。 |
 
 **依存関係グラフ:**
 ```
