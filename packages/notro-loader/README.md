@@ -1,42 +1,44 @@
 # notro-loader
 
+<p>
+<a href="README.md">English</a>
+ | 
+<a href="./README.ja.md">日本語</a>
+</p>
+
 ![npm](https://img.shields.io/npm/v/notro-loader)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
 
-An Astro Content Loader library that fetches Notion database content via the [Markdown Content API](https://developers.notion.com/) into [Astro Content Collections](https://docs.astro.build/en/guides/content-collections/).
+An Astro Content Loader library that fetches Notion database content via the [Markdown Content API](https://developers.notion.com/) into [Astro Content Collections](https://docs.astro.build/en/guides/content-collections/), compiles it with Sätteri (Astro 7's Rust-based Markdown/MDX processor), and renders it with a full set of Notion block components.
 
 > [!TIP]
 > This package is part of the [mosugi/notro](https://github.com/mosugi/notro) monorepo. See the blog template at `templates/blog/` for a full working example.
 
-## What NotroContent renders
+## Table of contents
 
-`NotroContent` compiles Notion markdown into HTML. Each Notion block type maps to a semantic HTML element by default. You can replace any element with your own styled component via the `components` prop.
+- [Entry points](#entry-points)
+- [Installation](#installation)
+- [Setup](#setup)
+  1. [`astro.config.mjs`](#1-astroconfigmjs)
+  2. [`src/content.config.ts`](#2-srccontentconfigts)
+  3. [Page component](#3-page-component)
+- [What `NotroContent` renders](#what-notrocontent-renders)
+- [Image handling](#image-handling)
+- [Markdown preprocessing (`preprocessNotionMarkdown`)](#markdown-preprocessing-preprocessnotionmarkdown)
+- [Notion API limitations](#notion-api-limitations)
+- [Environment variables](#environment-variables)
+- [API reference](#api-reference)
 
-| Notion block | Default HTML | notro-ui component |
+## Entry points
+
+`notro-loader` exposes four entry points, each scoped to where it's safe to import:
+
+| Entry point | Import | Use case |
 |---|---|---|
-| Paragraph | `<p>` | `ColoredParagraph` |
-| Heading 1–4 | `<h1>`–`<h4>` | `H1`–`H4` |
-| Callout | `<aside>` | `Callout` |
-| Quote | `<blockquote>` | `Quote` |
-| Toggle | `<details>` + `<summary>` | `Toggle` + `ToggleTitle` |
-| Divider | `<hr>` | — |
-| Code | `<pre>` | — |
-| Image | `<img>` | `ImageBlock` |
-| Video | `<figure>` | `Video` |
-| Audio | `<figure>` | `Audio` |
-| File | `<div>` | `FileBlock` |
-| PDF | `<figure>` | `PdfBlock` |
-| Table | `<table>` | `TableBlock` |
-| Table of contents | `<nav>` | `TableOfContents` |
-| Columns / Column | `<div>` / `<div>` | `Columns` / `Column` |
-| Page link | `<a>` | `PageRef` |
-| Database link | `<a>` | `DatabaseRef` |
-| Empty block | `<div>` | `EmptyBlock` |
-| Inline text (colored/underline) | `<span>` | `StyledSpan` |
-| @mention | `<span>` | `Mention` |
-| Date mention | `<time>` | `MentionDate` |
-
-`notro-ui` is an optional style layer. See [notro-ui](https://github.com/mosugi/notro/tree/main/packages/notro-ui) for details.
+| `notro-loader` | `import { NotroContent, loader, ... } from "notro-loader"` | Astro components and the Content Loader. **Cannot** be used in `astro.config.mjs` — Astro config is evaluated before the JSX renderer is registered. |
+| `notro-loader/utils` | `import { getPlainText, preprocessNotionMarkdown, ... } from "notro-loader/utils"` | Pure TypeScript helpers with no Astro component imports. Safe anywhere: config files, Node scripts, image services. |
+| `notro-loader/integration` | `import { notro } from "notro-loader/integration"` | The `notro()` Astro integration. Used in `astro.config.mjs` to register `@astrojs/mdx` with the correct Sätteri plugin pipeline. |
+| `notro-loader/image-service` | `import { notionImageService } from "notro-loader/image-service"` | Astro image service that strips expiring `X-Amz-*` query params from Notion S3 URLs before the cache key is computed. Used in `astro.config.mjs` under `image.service`. |
 
 ## Installation
 
@@ -56,18 +58,47 @@ npm install notro-loader
 
 ### 1. `astro.config.mjs`
 
-`astro add notro-loader` configures this automatically. If you installed manually, add:
+`astro add notro-loader` configures this automatically. If you installed manually, add the integration and (optionally) the image service:
 
 ```js
 import { defineConfig } from "astro/config";
 import { notro } from "notro-loader/integration";
+import { notionImageService } from "notro-loader/image-service";
 
 export default defineConfig({
+  image: { service: notionImageService },
   integrations: [notro()],
 });
 ```
 
-This registers `@astrojs/mdx` with the required plugin pipeline and the Astro JSX renderer that `NotroContent` depends on at runtime.
+`notro()` registers `@astrojs/mdx` with the required Sätteri plugin pipeline and the `astro:jsx` renderer that `NotroContent` depends on at runtime. With no options, it applies only its core Notion plugins (color classes, component renames, heading slugs, table of contents, page-link resolution). Rich features are opt-in:
+
+| Option | Type | Purpose |
+|---|---|---|
+| `mdastPlugins` | `MdastPluginInput[]` | Sätteri mdast plugins run after notro's core plugins (e.g. a KaTeX plugin for math) |
+| `hastPlugins` | `HastPluginInput[]` | Sätteri hast plugins run after renames, before slugs/TOC (e.g. [`satteri-beautiful-mermaid`](https://github.com/mosugi/notro/tree/main/packages/satteri-beautiful-mermaid)) |
+| `features` | `Features` | Extra Sätteri parser features merged over notro's defaults (e.g. `{ math: true }`) |
+| `shikiConfig` | `Record<string, unknown>` | Injects a Shiki hast plugin as the last user plugin (requires `npm install shiki`). Example: `{ theme: 'github-dark' }` |
+| `viteExternals` | `string[]` | Packages to add to Vite's `ssr.external` (for native binaries or dynamic imports) |
+| `extendMarkdownConfig` | `boolean` | Whether to extend Astro's base markdown config (default: `false`) |
+
+remark/rehype plugins are **not** supported — Astro 7 deprecated `markdown.remarkPlugins` / `rehypePlugins` and Sätteri cannot run them. Use Sätteri's mdast/hast plugin API instead ([docs](https://satteri.bruits.org/docs/plugins/)).
+
+```js
+import { defineConfig } from "astro/config";
+import { notro } from "notro-loader/integration";
+import { satteriMermaid } from "satteri-beautiful-mermaid";
+
+export default defineConfig({
+  integrations: [
+    notro({
+      shikiConfig: { theme: "github-dark" },
+      features: { math: true },
+      hastPlugins: [satteriMermaid({ theme: "github-dark" })],
+    }),
+  ],
+});
+```
 
 ### 2. `src/content.config.ts`
 
@@ -104,6 +135,25 @@ const posts = defineCollection({
 
 export const collections = { posts };
 ```
+
+`loader(options)` accepts:
+
+| Option | Type | Purpose |
+|---|---|---|
+| `queryParameters` | `QueryDataSourceParameters` | Passed directly to the Notion API's `dataSources.query` |
+| `clientOptions` | `ConstructorParameters<typeof Client>[0]` | Passed to the `@notionhq/client` constructor (e.g. `{ auth }`) |
+| `generateId` | `(page) => string` (optional) | Custom entry ID per page. Defaults to the Notion page UUID. Use when the entry ID must match a specific format (e.g. Starlight sidebar slugs) |
+| `useFilePath` | `boolean` (optional, default `false`) | Sets a synthetic `filePath` on each store entry so Starlight's sidebar autogenerate can resolve route paths. Only needed with `@astrojs/starlight` |
+
+The loader caches pages by `last_edited_time` digest and re-fetches entries that are deleted, edited, or contain expired Notion pre-signed S3 URLs.
+
+A live-reload variant is also available for Astro's [Live Content Collections](https://docs.astro.build/en/guides/content-collections/#live-content-collections):
+
+```typescript
+import { liveLoader } from "notro-loader";
+```
+
+It takes the same `queryParameters` / `clientOptions` shape as `loader()`.
 
 ### 3. Page component
 
@@ -144,23 +194,75 @@ const { entry } = Astro.props;
 <NotroContent markdown={entry.data.markdown} components={notroComponents} />
 ```
 
-Components are copied into `src/components/notro/` so you can edit them directly.
+Components are copied into `src/components/notro/` so you can edit them directly. See [notro-ui](https://github.com/mosugi/notro/tree/main/packages/notro-ui) for details.
 
-## Markdown processing (remark-notro)
+Optional `NotroContent` props:
 
-`notro-loader` delegates Notion Markdown preprocessing and directive syntax support to the [`remark-notro`](https://www.npmjs.com/package/remark-notro) package.
+| Prop | Type | Purpose |
+|---|---|---|
+| `linkToPages` | `Record<string, { url: string; title: string }>` | Resolves internal Notion page links. Build it with `buildLinkToPages()` |
+| `components` | `Record<string, unknown>` | Full component overrides (e.g. `{ Callout: MyCallout }`). Merged over the default headless components |
+| `class` | `string` | Class applied to the wrapping `<div>` |
 
-`remark-notro` is used inside notro-loader's MDX compile pipeline and is applied automatically when using `NotroContent`.
+## What `NotroContent` renders
 
-If you want to use `remark-notro` directly (in a custom unified pipeline or `@mdx-js/mdx`'s `evaluate()`), import it from the `remark-notro` package directly rather than from `notro-loader`.
+`NotroContent` compiles Notion markdown into HTML. Each Notion block type maps to a semantic HTML element by default. You can replace any element with your own styled component via the `components` prop.
 
-```ts
-// ✅ Import directly from remark-notro
-import { remarkNfm, preprocessNotionMarkdown } from "remark-notro";
+| Notion block | Default HTML | notro-ui component |
+|---|---|---|
+| Paragraph | `<p>` | `ColoredParagraph` |
+| Heading 1–4 | `<h1>`–`<h4>` | `H1`–`H4` |
+| Callout | `<aside>` | `Callout` |
+| Quote | `<blockquote>` | `Quote` |
+| Toggle | `<details>` + `<summary>` | `Toggle` + `ToggleTitle` |
+| Divider | `<hr>` | — |
+| Code | `<pre>` | — |
+| Image | `<img>` | `ImageBlock` |
+| Video | `<figure>` | `Video` |
+| Audio | `<figure>` | `Audio` |
+| File | `<div>` | `FileBlock` |
+| PDF | `<figure>` | `PdfBlock` |
+| Table | `<table>` | `TableBlock` |
+| Table of contents | `<nav>` | `TableOfContents` |
+| Columns / Column | `<div>` / `<div>` | `Columns` / `Column` |
+| Page link | `<a>` | `PageRef` |
+| Database link | `<a>` | `DatabaseRef` |
+| Empty block | `<div>` | `EmptyBlock` |
+| Inline text (colored/underline) | `<span>` | `StyledSpan` |
+| @mention | `<span>` | `Mention` |
+| Date mention | `<time>` | `MentionDate` |
 
-// ❌ Not needed from notro-loader (internal use only)
-// import { remarkNfm } from "notro-loader";
+`notro-ui` is an optional style layer. See [notro-ui](https://github.com/mosugi/notro/tree/main/packages/notro-ui) for details.
+
+## Image handling
+
+`notro-loader/image-service` exports `notionImageService`, an Astro image service that wraps Astro's Sharp service.
+
+Notion serves images from pre-signed S3 URLs whose query parameters (`X-Amz-*`) expire after roughly an hour. Astro derives its image cache key from the full URL, so a fresh URL on every build normally forces re-optimization every time. `notionImageService` strips the expiring parameters before the cache key is computed, so the optimized output is reused across builds as long as the underlying file hasn't changed.
+
+```js
+// astro.config.mjs
+import { notionImageService } from "notro-loader/image-service";
+
+export default defineConfig({
+  image: { service: notionImageService },
+});
 ```
+
+Always use Astro's `<Image />` component for Notion images rather than a raw `<img>` tag, so this caching behavior takes effect.
+
+## Markdown preprocessing (`preprocessNotionMarkdown`)
+
+`preprocessNotionMarkdown()` fixes structural issues in Notion's raw Markdown output before it's handed to Sätteri's `evaluate()` — things like `---` dividers without a preceding blank line, legacy `:::callout{…}` directive syntax, and closing tags that need a trailing blank line so CommonMark doesn't swallow the following content as raw HTML.
+
+It's built into `notro-loader` and is applied automatically whenever you use `NotroContent` — no setup required. It runs only on that runtime Notion-content path; static `.mdx` files compiled through the `notro()` integration are **not** run through it, since they aren't Notion API output and don't have these quirks. It's also exported directly, in case you need it in a custom compile pipeline:
+
+```typescript
+import { preprocessNotionMarkdown } from "notro-loader/utils";
+```
+
+> [!NOTE]
+> Earlier versions of notro-loader delegated this step to a separate `remark-notro` package. That package has been discontinued — `preprocessNotionMarkdown()` now lives in `notro-loader` itself, exported from both `notro-loader` and `notro-loader/utils`.
 
 ## Notion API limitations
 
@@ -208,21 +310,7 @@ import { remarkNfm, preprocessNotionMarkdown } from "remark-notro";
 | `NOTION_TOKEN` | Notion Internal Integration Token |
 | `NOTION_DATASOURCE_ID` | Notion data source ID |
 
-## API Reference
-
-### `loader(options)`
-
-Astro Content Loader. Pass Notion API `dataSources.query` parameters via `queryParameters`.
-
-### `pageWithMarkdownSchema`
-
-Base Zod schema returned by the loader. Extends `pageObjectResponseSchema` with `markdown: z.string()`. Extend with `.extend()` for custom schemas.
-
-### Property schemas
-
-Use the `notroProperties` shorthand to define database property types in `content.config.ts` (see [`notroProperties`](#notroproperties)).
-
-Individual schemas (e.g. `titlePropertyPageObjectResponseSchema`) remain exported for backwards compatibility.
+## API reference
 
 ### Components
 
@@ -232,6 +320,14 @@ Individual schemas (e.g. `titlePropertyPageObjectResponseSchema`) remain exporte
 | `DatabaseCover` | Renders a Notion cover image with optimization |
 | `DatabaseProperty` | Renders a Notion property value by type |
 | `compileMdxCached` | Low-level MDX compile API. Use when building a custom `NotroContent` |
+
+### Loader
+
+| Export | Description |
+|---|---|
+| `loader(options)` | Astro Content Loader. See [`src/content.config.ts`](#2-srccontentconfigts) for options |
+| `liveLoader(options)` | Live Content Collections variant of `loader()` |
+| `pageWithMarkdownSchema` | Base Zod schema returned by the loader. Extends `pageObjectResponseSchema` with `markdown: z.string()`. Extend with `.extend()` for custom schemas |
 
 ### `notroProperties`
 
@@ -265,6 +361,8 @@ import { notroProperties } from "notro-loader";
 // notroProperties.verification → verificationPropertyPageObjectResponseSchema
 ```
 
+Individual schemas (e.g. `titlePropertyPageObjectResponseSchema`) remain exported for backwards compatibility.
+
 ### Utilities
 
 | Function | Description |
@@ -274,3 +372,5 @@ import { notroProperties } from "notro-loader";
 | `hasTag(property, tagName)` | Returns whether a multi-select property contains the given tag name. Safe to call without a type guard |
 | `buildLinkToPages(entries, options)` | Builds a `linkToPages` map from collection entries. Pass to `NotroContent` for resolving inter-page Notion links |
 | `colorToCSS(color)` | Converts a Notion color name to an inline CSS style string (for use in custom components) |
+| `preprocessNotionMarkdown(markdown)` | Fixes structural issues in Notion's raw Markdown before MDX compilation. Applied automatically by `NotroContent` — see [Markdown preprocessing](#markdown-preprocessing-preprocessnotionmarkdown) |
+| `normalizeNotionPresignedUrl(url)` | Strips expiring `X-Amz-*` query params from a Notion S3 URL. Used internally by `notionImageService` |

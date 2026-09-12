@@ -8,8 +8,6 @@
 <a href="./README.ko.md">한국어</a>-->
 </p>
 
-![NotroTail.webp](docs%2Fpublic%2FNotroTail.webp)
-
 <p align="center">
 <a href="https://notrotail.mosugi.com">Website</a>
  | 
@@ -29,8 +27,6 @@
 <a href="https://notrotail.mosugi.com">NotroTail</a>
 </p>
 
-![BeforeAfter.png](docs%2Fpublic%2FBeforeAfter.png)
-
 ## Quick Start
 
 ```sh
@@ -39,7 +35,7 @@ npm create notro@latest my-site
 
 The CLI will download the starter template, create `.env` from `.env.example`, and optionally install dependencies. Then edit `.env` with your Notion credentials and run `npm run dev`.
 
-See the [documentation](https://github.com/mosugi/notro/tree/main/docs) for detailed setup instructions.
+See the [documentation](https://github.com/mosugi/notro/tree/main/templates/docs) for detailed setup instructions.
 
 ## Features
 
@@ -167,13 +163,16 @@ This repository is a **pnpm workspace monorepo** containing the following packag
 
 | Package | Path | Role |
 |---|---|---|
-| [`notro-loader`](./packages/notro-loader/) | `packages/notro-loader/` | Astro + Notion API integration library. Provides the Content Loader, the Sätteri MDX compile pipeline (including Notion markdown normalization), and headless Astro components for all Notion block types. |
+| [`notro-loader`](./packages/notro-loader/) | `packages/notro-loader/` | Astro + Notion API integration library. Provides the Content Loader, the Sätteri MDX compile pipeline (including Notion markdown normalization), and headless Astro components for all Notion block types. See the [`notro-loader` README](./packages/notro-loader/README.md) for usage. |
 | [`notro-ui`](./packages/notro-ui/) | `packages/notro-ui/` | Copy-and-own styled components for `notro-loader` (shadcn style). Run `notro-ui add --all` to install components into your project — they become your code, editable directly. |
 | [`satteri-beautiful-mermaid`](./packages/satteri-beautiful-mermaid/) | `packages/satteri-beautiful-mermaid/` | Sätteri hast plugin that renders Mermaid code blocks to inline SVG at build time. |
 | [`create-notro`](./packages/create-notro/) | `packages/create-notro/` | CLI scaffolding tool. Run `npm create notro@latest` to choose a template and scaffold a new site. |
+| [`notro-md-sync`](./packages/notro-md-sync/) | `packages/notro-md-sync/` | CLI tool for bidirectional sync between local markdown files and a Notion data source. |
 | `notro-blog` (blog) | `templates/blog/` | Full-featured blog template — reference implementation with blog list, tags, pagination, RSS, and SEO. |
 | `notro-blank` (blank) | `templates/blank/` | Minimal starter — just pages and Notion content rendering. |
-| `docs` | `docs/` | Documentation site built with Astro Starlight. |
+| `notro-basics` (basics) | `templates/basics/` | Minimal blog starter — a Notion database rendered as a posts collection, without the full blog template's tags/pagination/RSS. |
+| `notro-gallery` (gallery) | `templates/gallery/` | Portfolio/works gallery starter, rendering a Notion database as a tagged works collection. |
+| `notro-docs` (docs) | `templates/docs/` | Documentation site built with Astro Starlight — this is what powers [notrotail.mosugi.com/doc](https://notrotail.mosugi.com/doc). |
 
 **Dependency graph:**
 ```
